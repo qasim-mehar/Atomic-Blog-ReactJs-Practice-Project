@@ -1,6 +1,6 @@
 
 import { faker } from "@faker-js/faker";
-import { Children, createContext, useState } from "react";
+import {  createContext, useContext, useState } from "react";
 function createRandomPost() {
   return {
     title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
@@ -34,6 +34,7 @@ function PostProvider({children}) {
         setPosts([]);
       }
   return (
+    //2) PROVIDE VALUE TO CHILD
     <PostContext.Provider value={{
       posts:searchedPosts,
       onClearPosts:handleClearPosts,
@@ -45,5 +46,9 @@ function PostProvider({children}) {
     </PostContext.Provider>
   );
 }
-
-export  {PostProvider,PostContext};
+//CUSTOM HOOK WHICH SIMPLY PROVIDE ACTUAL VALUES TO CONSUMER
+function usePosts(){
+    const context=useContext(PostContext);
+    return context;
+}
+export  {PostProvider,usePosts};
