@@ -49,6 +49,8 @@ function PostProvider({children}) {
 //CUSTOM HOOK WHICH SIMPLY PROVIDE ACTUAL VALUES TO CONSUMER
 function usePosts(){
     const context=useContext(PostContext);
+    if (context===undefined) throw new Error("Post context was use out of PostProvider");
+    
     return context;
 }
 export  {PostProvider,usePosts};
