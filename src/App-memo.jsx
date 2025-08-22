@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { faker } from "@faker-js/faker";
 
 function createRandomPost() {
@@ -14,7 +14,14 @@ function App() {
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [isFakeDark, setIsFakeDark] = useState(false);
+  // IT WILL KEEP THE VALUES SAVE IN THE MEMORY EVEN AFTER RE-RENDERS SINCE IT HAS NOTHING IN INDEPENDENCY ARRAY.
+ const archivedOptions=useMemo(()=>{
+    return {
+    show:false,
+    title:"Post archived in addition to main post"
 
+ }
+ },[])
   // Derived state. These are the posts that will actually be displayed
   const searchedPosts =
     searchQuery.length > 0
@@ -57,7 +64,7 @@ function App() {
         setSearchQuery={setSearchQuery}
       />
       <Main posts={searchedPosts} onAddPost={handleAddPost} />
-      <Archive show={false} />
+      <Archive archivedOptions={archivedOptions}/>
       <Footer />
     </section>
   );
@@ -154,14 +161,14 @@ function List({ posts }) {
   );
 }
 
-const Archive=memo(function Archive({ show }) {
+const Archive=memo(function Archive({ archivedOptions }) {
   // Here we don't need the setter function. We're only using state to store these posts because the callback function passed into useState (which generates the posts) is only called once, on the initial render. So we use this trick as an optimization technique, because if we just used a regular variable, these posts would be re-created on every render. We could also move the posts outside the components, but I wanted to show you this trick 😉
   const [posts] = useState(() =>
     // 💥 WARNING: This might make your computer slow! Try a smaller `length` first
     Array.from({ length: 30000 }, () => createRandomPost())
   );
 
-  const [showArchive, setShowArchive] = useState(show);
+  const [showArchive, setShowArchive] = useState(archivedOptions.show);
 
   return (
     <aside>
